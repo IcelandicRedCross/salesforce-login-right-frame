@@ -17,14 +17,18 @@
 <body style="margin:0;font-family:Verdana, Geneva, Tahoma, sans-serif;">
     
     <div style="display: grid;min-height:100vh;background-color:rgb(245, 51, 64)">
-        <div style="max-width:80rem;padding:2rem;margin:auto;place-self:center;">
+        <div id="quoteWrapper" style="max-width:80rem;padding:2rem;margin:auto;place-self:center;opacity:1;transition:opacity 1s;">
             <div id="quote" style="font-size:x-large;color:beige;">"We can't help everyone, but everyone can help someone."</div>
             <div id="author" style="font-size: large;font-style:italic;color:beige;margin-top:0.5rem;">Ronald Reagan</div>
         </div>
     </div>
 
     <script>
-        const redCrossQuotes = [
+        let quoteWrapper = document.getElementById('quoteWrapper');
+        let quoteElement = document.getElementById('quote');
+        let authorElement = document.getElementById('author');
+        let quoteIndex = 0;
+        let quotes = [
             { quote: "I have an almost complete disregard of precedent, and a faith in the possibility of something better. It irritates me to be told how things have always been done. I defy the tyranny of precedent. I go for anything new that might improve the past.", author: "Clara Barton" },
             { quote: "The Red Cross, born of a desire to bring assistance without discrimination to the wounded on the battlefield, endeavors—in its international and national capacity—to prevent and alleviate human suffering wherever it may be found.", author: "Henry Dunant" },
             { quote: "The Red Cross is a symbol of hope and humanity, and it is our duty to support and uphold its values.", author: "Princess Margriet of the Netherlands" },
@@ -61,16 +65,61 @@
             { quote: "The Red Cross helps us see the best in humanity.", author: "Angelina Jolie" }
         ];
 
-        let random = Math.floor(Math.random() * redCrossQuotes.length);
-        if(random == 0){random = 1;}
-        if(random == redCrossQuotes.length){random = quote.length - 1;}
-        console.log(random);
-        console.log(redCrossQuotes.length);
-        let quoteWrapper = document.getElementById('quote');
-        let authorWrapper = document.getElementById('author');
-        let q = redCrossQuotes[random];
-        quoteWrapper.innerText = '"' + q.quote + '"';
-        authorWrapper.innerText = q.author;
+        function randomIndex(){
+            let random = Math.floor(Math.random() * quotes.length);
+            if(random == 0){random = 1;}
+            if(random == quotes.length){random = quote.length - 1;}
+            return random;
+        }
+
+        function nextIndex(){
+            if(quoteIndex == (quotes.length - 1)){
+                return randomIndex();
+            }
+            return quoteIndex + 1;
+        }
+    
+        function fadeOut(element, duration, callback) {
+            element.style.transition = `opacity ${duration}ms`;
+            element.style.opacity = 0;
+
+            setTimeout(function() {
+                callback();
+            }, duration);
+        }
+
+        function fadeIn(element, duration) {
+            element.style.transition = `opacity ${duration}ms`;
+            element.style.opacity = 1;
+        }
+
+        function fadeText() {
+            fadeOut(quoteWrapper, 1000, function() { // Fade out over 1 second
+                setQuoteText();
+                fadeIn(quoteWrapper, 1000); // Fade in over 1 second
+            });
+        }
+
+        function setQuoteText(){
+            index = randomIndex();
+            let q = quotes[index];
+            quoteElement.innerText = '"' + q.quote + '"';
+            authorElement.innerText = q.author;
+        }
+
+        setQuoteText();
+
+        let i = 1;
+        function quoteLoop() {
+            setTimeout(function() {
+                fadeText();
+                i++;
+                if(i < 100){
+                    quoteLoop();
+                }
+            }, 10000);
+        }
+        quoteLoop();
     </script>
 
 </body>
