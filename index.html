@@ -12,11 +12,24 @@
         a:hover {
             opacity: 0.8;
         }
+        .halloween-bg {
+            background-image:linear-gradient(#20004c,#a200ff);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            display:none;
+        }
     </style>
 </head>
 <body style="margin:0;font-family:Verdana, Geneva, Tahoma, sans-serif;">
     
-    <div style="display: grid;min-height:100vh;background-color:rgb(245, 51, 64)">
+    <div id="halloweenWrapper" class="halloween-bg">
+        <div style="width: 50%;margin:auto;">
+            <img src="halloween.png" style="width: 100%;"/>
+        </div>
+    </div>
+
+    <div style="display: grid;min-height:100vh;background-color:rgb(245, 51, 64)" id="quoteWrapper">
         <div id="quoteWrapper" style="max-width:80rem;padding:2rem;margin:auto;place-self:center;opacity:1;transition:opacity 1s;">
             <div id="quote" style="font-size:x-large;color:beige;">"We can't help everyone, but everyone can help someone."</div>
             <div id="author" style="font-size: large;font-style:italic;color:beige;margin-top:0.5rem;">Ronald Reagan</div>
@@ -24,6 +37,18 @@
     </div>
 
     <script>
+
+        // Halloween logic
+        let d = new Date();
+        let month = d.getMonth() + 1;
+        let day = d.getDate();
+        if(month == 10 && day == 31){
+            let halloweenWrapper = document.getElementById('halloweenWrapper');
+            let quoteWrapper = document.getElementById('quoteWrapper');
+            halloweenWrapper.style.display = 'block';
+            quoteWrapper.style.display = 'none';
+        }
+
         let quoteWrapper = document.getElementById('quoteWrapper');
         let quoteElement = document.getElementById('quote');
         let authorElement = document.getElementById('author');
@@ -145,7 +170,6 @@
             { quote: "Hardships often prepare ordinary people for an extraordinary destiny.", author: "C.S. Lewis" },
             { quote: "Success is not in what you have, but who you are.", author: "Bo Bennett" }
         ];
-        console.log(quotes.length);
 
         function randomIndex(){
             let random = Math.floor(Math.random() * quotes.length);
